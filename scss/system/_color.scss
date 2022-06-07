@@ -1,0 +1,200 @@
+@use "sass:color";
+@use "sass:list";
+@use "sass:map";
+@use "sass:string";
+
+// #region Palette
+// #region Definition
+$palette-keys: (
+	"primary",
+	"secondary",
+	"tertiary",
+	"neutral",
+	"neutral-variant",
+	"error"
+) !default;
+$palette-tones: (
+	1%,
+	5%,
+	10%,
+	20%,
+	30%,
+	40%,
+	50%,
+	60%,
+	70%,
+	80%,
+	90%,
+	95%,
+	99%
+) !default;
+// #endregion
+
+// #region Default values
+$palette-default-values: (
+	"primary": hsl(212, 75%, 50%),
+	"secondary": hsl(272, 75%, 50%),
+	"tertiary": hsl(312, 75%, 50%),
+	"neutral": hsl(212, 2%, 50%),
+	"neutral-variant": hsl(212, 8%, 50%),
+	"error": hsl(352, 50%, 50%),
+);
+// #endregion
+
+// #region Configuration
+// #endregion
+
+// #region Generation
+@mixin generate-palette-tokens(
+	$prefix: "palette",
+	$values: $palette-default-values,
+	$keys: $palette-keys,
+	$tones: $palette-tones
+) {
+	--palette-black: #000000;
+	--palette-white: #ffffff;
+
+	@each $key in $keys {
+		@each $tone in $tones {
+			--#{$prefix}-#{$key}#{string.slice(#{$tone}, 0, string.length(#{$tone}) - 1)}: #{color.change(
+					map.get($values, $key),
+					$lightness: $tone
+				)};
+		}
+	}
+}
+// #endregion
+// #endregion
+
+// #region Definition
+$color-modes: ("light", "dark") !default;
+@function color-roles-accents($name) {
+	@return (
+		"#{$name}",
+		"on-#{$name}",
+		"#{$name}-container",
+		"on-#{$name}-container"
+	);
+}
+@function color-roles-neutrals($name) {
+	@return ("#{$name}", "on-#{$name}");
+}
+$color-key-roles-mapping: (
+	"accents": (
+		"primary",
+		"secondary",
+		"tertiary",
+		"error",
+	),
+	"neutral": (
+		"background",
+		"surface",
+	),
+	"single": (
+		"surface-variant",
+		"on-surface-variant",
+		"outline",
+		"shadow",
+		"surface-tint",
+		"inverse-surface",
+		"inverse-on-surface",
+		"inverse-primary",
+	),
+);
+// #endregion
+
+// #region Default values
+$color-default-values: (
+	"light": (
+		"accents": (
+			"40",
+			"100",
+			"90",
+			"10",
+		),
+		"neutral": (
+			"99",
+			"10",
+		),
+		"single": (
+			"neutral-variant90",
+			"neutral-variant30",
+			"neutral-variant50",
+			"black",
+			"primary50",
+			"neutral20",
+			"neutral95",
+			"primary80",
+		),
+	),
+	"dark": (
+		"accents": (
+			"80",
+			"20",
+			"30",
+			"90",
+		),
+		"neutral": (
+			"10",
+			"90",
+		),
+		"single": (
+			"neutral-variant30",
+			"neutral-variant80",
+			"neutral-variant60",
+			"black",
+			"primary50",
+			"neutral20",
+			"neutral95",
+			"primary80",
+		),
+	),
+);
+// #endregion
+
+// #region Configuration
+// #endregion
+
+// #region Generation
+@mixin generate-color-tokens(
+	$prefix: "color",
+	$values: $color-default-values,
+	$roles: $color-key-roles-mapping,
+	$modes: $color-modes
+) {
+	@each $role-key, $role-colors in $roles {
+		$color-roles-list: ();
+		@each $color in $role-colors {
+			@if $role-key == "accents" {
+				$color-roles-list: list.append(
+					$color-roles-list,
+					color-roles-accents($color)
+				);
+			} @else if $role-key == "neutral" {
+				$color-roles-list: list.append(
+					$color-roles-list,
+					color-roles-neutrals($color)
+				);
+			} @else {
+				$color-roles-list: list.append($color-roles-list, ($color));
+			}
+
+			@each $mode in $modes {
+				@media (prefers-color-scheme: #{$mode}) {
+					@each $color-roles in $color-roles-list {
+						@each $color-role in $color-roles {
+							@debug --palette-#{$color-role}#{list.nth(
+									map.get($values, $mode, $role-key),
+									list.index(map.get($roles, $role-key), $color)
+								)};
+							--#{$prefix}-#{$color-role}: var();
+							// --#{$prefix}-#{$color-role}: var(--palette-#{$color-role}#{list.nth(map.get($values, $mode), list.index($color-roles, $color-role))});
+						}
+						// --#{$prefix}-#{$color-role}: var(--palette-#{$color-role}#{list.nth(map.get($values, $mode), list.index($color-roles, $color-role))});
+					}
+				}
+			}
+		}
+	}
+}
+// #endregion

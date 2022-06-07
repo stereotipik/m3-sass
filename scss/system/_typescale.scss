@@ -1,0 +1,295 @@
+@use "sass:list";
+@use "sass:map";
+
+// #region Definition
+$typescale-types: ("display", "headline", "title", "label", "body") !default;
+$typescale-sizes: ("lg", "md", "sm") !default;
+$typescale-properties: (
+	"font",
+	"line-height",
+	"size",
+	"tracking",
+	"weight"
+) !default;
+// #endregion
+
+// #region Default values
+$typescale-default-values: (
+	"display": (
+		("Roboto Regular", 64, 57, 0, 400),
+		("Roboto Regular", 52, 45, 0, 400),
+		("Roboto Regular", 44, 36, 0, 400),
+	),
+	"headline": (
+		("Roboto Regular", 40, 32, 0, 400),
+		("Roboto Regular", 36, 28, 0, 400),
+		("Roboto Regular", 32, 24, 0, 400),
+	),
+	"title": (
+		("Roboto Regular", 28, 22, 0, 400),
+		("Roboto Medium", 24, 16, 0.15, 500),
+		("Roboto Medium", 20, 14, 0.1, 500),
+	),
+	"label": (
+		("Roboto Medium", 20, 14, 0.1, 500),
+		("Roboto Medium", 16, 12, 0.5, 500),
+		("Roboto Medium", 6, 11, 0.5, 500),
+	),
+	"body": (
+		("Roboto Medium", 24, 16, 0.5, 400),
+		("Roboto Medium", 20, 14, 0.25, 400),
+		("Roboto Medium", 16, 12, 0.4, 400),
+	),
+) !default;
+// #endregion
+
+// #region Configuration
+$typescale-reference-mapping-configuration: (
+	"display": (
+		"font": (
+			("typeface", "brand"),
+			("typeface", "brand"),
+			("typeface", "brand"),
+		),
+		"weight": (
+			("typeface", "weight-regular"),
+			("typeface", "weight-regular"),
+			("typeface", "weight-regular"),
+		),
+	),
+	"headline": (
+		"font": (
+			("typeface", "brand"),
+			("typeface", "brand"),
+			("typeface", "brand"),
+		),
+		"weight": (
+			("typeface", "weight-regular"),
+			("typeface", "weight-regular"),
+			("typeface", "weight-regular"),
+		),
+	),
+	"title": (
+		"font": (
+			("typeface", "brand"),
+			("typeface", "plain"),
+			("typeface", "plain"),
+		),
+		"weight": (
+			("typeface", "weight-regular"),
+			("typeface", "weight-medium"),
+			("typeface", "weight-medium"),
+		),
+	),
+	"label": (
+		"font": (
+			("typeface", "plain"),
+			("typeface", "plain"),
+			("typeface", "plain"),
+		),
+		"weight": (
+			("typeface", "weight-medium"),
+			("typeface", "weight-medium"),
+			("typeface", "weight-medium"),
+		),
+	),
+	"body": (
+		"font": (
+			("typeface", "plain"),
+			("typeface", "plain"),
+			("typeface", "plain"),
+		),
+		"weight": (
+			("typeface", "weight-regular"),
+			("typeface", "weight-regular"),
+			("typeface", "weight-regular"),
+		),
+	),
+) !default;
+
+@function configure-typescale-tokens($reference) {
+	$overrides: ();
+
+	@if map.has-key($ref, "typeface", "brand") {
+		$typeface-brand: map.get($ref, "typeface", "brand");
+		$overrides: map.merge(
+			$overrides,
+			(
+				"display": (
+					"large": (
+						"font": $typeface-brand,
+					),
+					"medium": (
+						"font": $typeface-brand,
+					),
+					"small": (
+						"font": $typeface-brand,
+					),
+				),
+				"headline": (
+					"large": (
+						"font": $typeface-brand,
+					),
+					"medium": (
+						"font": $typeface-brand,
+					),
+					"small": (
+						"font": $typeface-brand,
+					),
+				),
+				"title": (
+					"large": (
+						"font": $typeface-brand,
+					),
+				),
+			)
+		);
+	}
+
+	@if map.has-key($ref, "typeface", "plain") {
+		$typeface-plain: map.get($ref, "typeface", "brand");
+		$overrides: map.merge(
+			$overrides,
+			(
+				"title": (
+					"medium": (
+						"font": $typeface-plain,
+					),
+					"small": (
+						"font": $typeface-plain,
+					),
+				),
+				"label": (
+					"large": (
+						"font": $typeface-plain,
+					),
+					"medium": (
+						"font": $typeface-plain,
+					),
+					"small": (
+						"font": $typeface-plain,
+					),
+				),
+				"body": (
+					"large": (
+						"font": $typeface-plain,
+					),
+					"medium": (
+						"font": $typeface-plain,
+					),
+					"small": (
+						"font": $typeface-plain,
+					),
+				),
+			)
+		);
+	}
+
+	@if map.has-key($ref, "typeface", "weight") {
+		$typeface-weight: map.get($ref, "typeface", "weight");
+		$overrides: map.merge(
+			$overrides,
+			(
+				"title": (
+					"large": (
+						"weight": $typeface-weight,
+					),
+				),
+			)
+		);
+	}
+
+	@if map.has-key($ref, "typeface", "weight-regular") {
+		$typeface-weight-regular: map.get($ref, "typeface", "weight-regular");
+		$overrides: map.merge(
+			$overrides,
+			(
+				"display": (
+					"large": (
+						"weight": $typeface-weight-regular,
+					),
+					"medium": (
+						"weight": $typeface-weight-regular,
+					),
+					"small": (
+						"weight": $typeface-weight-regular,
+					),
+				),
+				"headline": (
+					"large": (
+						"weight": $typeface-weight-regular,
+					),
+					"medium": (
+						"weight": $typeface-weight-regular,
+					),
+					"small": (
+						"weight": $typeface-weight-regular,
+					),
+				),
+				"body": (
+					"large": (
+						"weight": $typeface-weight-regular,
+					),
+					"medium": (
+						"weight": $typeface-weight-regular,
+					),
+					"small": (
+						"weight": $typeface-weight-regular,
+					),
+				),
+			)
+		);
+	}
+
+	@if map.has-key($ref, "typeface", "weight-medium") {
+		$typeface-weight-medium: map.get($ref, "typeface", "weight-medium");
+		$overrides: map.merge(
+			$overrides,
+			(
+				"title": (
+					"medium": (
+						"weight": $typeface-weight-medium,
+					),
+					"small": (
+						"weight": $typeface-weight-medium,
+					),
+				),
+				"label": (
+					"large": (
+						"weight": $typeface-weight-medium,
+					),
+					"medium": (
+						"weight": $typeface-weight-medium,
+					),
+					"small": (
+						"weight": $typeface-weight-medium,
+					),
+				),
+			)
+		);
+	}
+
+	@return map.merge($typescale, $overrides);
+}
+// #endregion
+
+// #region Generation
+@mixin generate-typescale-tokens(
+	$prefix: "typescale",
+	$values: $typescale-default-values,
+	$types: $typescale-types,
+	$sizes: $typescale-sizes,
+	$properties: $typescale-properties
+) {
+	@each $type in $types {
+		@each $size in $sizes {
+			@each $property in $properties {
+				--#{$prefix}-#{$type}-#{$size}-#{$property}: #{list.nth(
+						list.nth(map.get($values, $type), list.index($sizes, $size)),
+						list.index($properties, $property)
+					)};
+			}
+		}
+	}
+}
+// #endregion

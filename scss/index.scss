@@ -1,0 +1,8 @@
+@import "system/typescale";
+@import "system/color";
+
+:root {
+  @include generate-palette-tokens();
+	@include generate-color-tokens();
+  @include generate-typescale-tokens();
+}

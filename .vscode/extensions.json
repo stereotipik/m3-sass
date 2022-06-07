@@ -1,0 +1,12 @@
+{
+    "recommendations": [
+        "adobe.xd",
+        "editorconfig.editorconfig",
+        "visualstudioexptteam.vscodeintellicode",
+        "visualstudioexptteam.vscodeintellicode-completions",
+        "eg2.vscode-npm-script",
+        "christian-kohler.npm-intellisense",
+        "esbenp.prettier-vscode",
+        "burkeholland.simple-react-snippets"
+    ]
+}
